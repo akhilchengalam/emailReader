@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,8 +20,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.bourntec.emailreader.models.EmailStoreModel;
 import com.bourntec.emailreader.repo.EmailStoreRepository;
 import com.bourntec.emailreader.service.EmailStoreService;
+import com.bourntec.emailreader.service.impl.EmailStoreServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT /*, properties = "spring.profiles.active=test"*/)
 class PersistTests {
 	
@@ -31,7 +34,7 @@ class PersistTests {
     private EmailStoreRepository emailStoreRepository;
 
     @InjectMocks
-    private EmailStoreService emailStoreService;
+    private EmailStoreServiceImpl emailStoreService;
 
     @BeforeAll
     void setup(){
@@ -61,6 +64,18 @@ class PersistTests {
     }
 
     @Test
+    void save() {
+
+        Mockito.when(emailStoreRepository.save(email_one)).thenReturn(email_one);
+        assertThat(emailStoreService.saveEmail(email_one), is(email_one));
+        Mockito.verify(emailStoreRepository, Mockito.times(1)).save(email_one);
+
+        Mockito.when(emailStoreRepository.save(email_two)).thenReturn(email_two);
+        assertThat(emailStoreService.saveEmail(email_two).getEmailSubject(), is("Subject 2"));
+        Mockito.verify(emailStoreRepository, Mockito.times(1)).save(email_two);
+    }
+    
+    @Test
     void findAllTest_WhenRecord() {
 
         Mockito.when(emailStoreRepository.findAll()).thenReturn(Arrays.asList(email_one, email_two));
@@ -75,25 +90,15 @@ class PersistTests {
     void findById() {
 
         Mockito.when(emailStoreRepository.findById(1L)).thenReturn(Optional.of(email_one));
-        assertThat(emailStoreService.findByEmailId(1L), is(Optional.of(email_one)));
+        assertThat(emailStoreService.findByEmailId(1L), is(email_one));
         Mockito.verify(emailStoreRepository, Mockito.times(1)).findById(1L);
     }
 
-    @Test
-    void save() {
-
-        Mockito.when(emailStoreRepository.save(email_one)).thenReturn(email_one);
-        assertThat(emailStoreService.saveEmail(email_one), is(email_one));
-        Mockito.verify(emailStoreRepository, Mockito.times(1)).save(email_one);
-
-        Mockito.when(emailStoreRepository.save(email_two)).thenReturn(email_two);
-        assertThat(emailStoreService.saveEmail(email_two).getEmailSubject(), is("Subject 2"));
-        Mockito.verify(emailStoreRepository, Mockito.times(1)).save(email_two);
-    }
+    
 
 //    @Test
 //    void deleteById() {
-//        emailStoreService.deleteById(1L);
+//        emailStoreService.deleteByEmailId(1L);
 //        Mockito.verify(emailStoreRepository, Mockito.times(1)).deleteById(1L);
 //    }
     
