@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.bourntec.emailreader.models.EmailStoreModel;
 import com.bourntec.emailreader.repo.EmailStoreRepository;
-import com.bourntec.emailreader.service.EmailStoreService;
 import com.bourntec.emailreader.service.impl.EmailStoreServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
