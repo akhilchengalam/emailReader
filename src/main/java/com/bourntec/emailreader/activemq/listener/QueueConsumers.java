@@ -30,16 +30,21 @@ public class QueueConsumers {
 	@Autowired
 	Queue persistQueue;
 
-	@JmsListener(destination = "mailpoller.saveQueue")
+	@JmsListener(destination = "emailreader.saveQueue")
 	public void saveFiles(byte[] rawMessageBytes) throws IOException, MessagingException {
 		MimeMessage message = mailProcessor.toMimeMessage(rawMessageBytes);
 		jmsTemplate.convertAndSend(persistQueue, mailProcessor.processMimeMessage(message));
 	}
 
-	@JmsListener(destination = "mailpoller.persistQueue")
+	@JmsListener(destination = "emailreader.persistQueue")
 	public void persistToDB(Map<String,String> email) {
 		mailProcessor.printEmail(email);
 		mailProcessor.saveEmail(email);
-
 	}
+	
+	@JmsListener(destination = "emailreader.jmsTest")
+	public void jmsTest(String input) {
+		jmsTemplate.convertAndSend("emailreader.jmsTestReceiver", input);
+	}
+	
 }

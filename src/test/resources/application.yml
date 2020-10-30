@@ -1,0 +1,2 @@
+poller.server: 'imaps://imap.gmail.com:993/inbox'
+poller.emails: '[{"email":"username@email.com","password":"password","fetchStrategy":"imapPollFlow"}]'

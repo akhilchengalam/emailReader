@@ -23,18 +23,18 @@ public class AMQConfig {
 
     @Bean
     public Queue saveQueue() {
-        return new ActiveMQQueue("mailpoller.saveQueue");
+        return new ActiveMQQueue("emailreader.saveQueue");
     }
     
     @Bean
     public Queue persistQueue() {
-        return new ActiveMQQueue("mailpoller.persistQueue");
+        return new ActiveMQQueue("emailreader.persistQueue");
     }
 
     @Bean
     public ActiveMQConnectionFactory activeMQConnectionFactory() {
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-        factory.setTrustedPackages(Arrays.asList("com.bourntec.mailpoller"));
+        factory.setTrustedPackages(Arrays.asList("com.bourntec.emailreader"));
         factory.setBrokerURL(brokerUrl);
         return factory;
     }

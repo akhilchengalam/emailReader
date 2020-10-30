@@ -61,6 +61,20 @@ public class EmailStoreServiceImpl implements EmailStoreService {
 		return emailStoreRepo.findByEmailSubject(subject);
 	}
 
+
+
+	@Override
+	public List<EmailStoreModel> findAll() {
+		return emailStoreRepo.findAll();
+	}
+
+
+
+	@Override
+	public EmailStoreModel saveEmail(EmailStoreModel esm) {
+		return emailStoreRepo.save(esm);
+	}
+
 	
 	
 }

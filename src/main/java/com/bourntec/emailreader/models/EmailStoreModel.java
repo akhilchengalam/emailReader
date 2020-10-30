@@ -65,6 +65,24 @@ public class EmailStoreModel  implements Serializable {
 	@Column(nullable = false, updatable = true, columnDefinition = "varchar(4096)")
 	private String emailAttachmentNames;
 
+	
+	public EmailStoreModel(String emailSubject, @NotBlank String emailFrom, @NotBlank String emailTo,
+			@NotBlank String emailContentType, @NotBlank String emailSentDate, String emailBody,
+			Boolean emailHasAttachment, Integer emailAttachmentCount, @NotBlank String emailAttachmentNames) {
+		super();
+		this.emailSubject = emailSubject;
+		this.emailFrom = emailFrom;
+		this.emailTo = emailTo;
+		this.emailContentType = emailContentType;
+		this.emailSentDate = emailSentDate;
+		this.emailBody = emailBody;
+		this.emailHasAttachment = emailHasAttachment;
+		this.emailAttachmentCount = emailAttachmentCount;
+		this.emailAttachmentNames = emailAttachmentNames;
+	}
+
+	public EmailStoreModel() { }
+
 	public Long getEmailId() {
 		return emailId;
 	}
