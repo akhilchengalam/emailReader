@@ -26,9 +26,9 @@ services:
     image: webcenter/activemq:latest
     ports:
       # mqtt
-      - "1883:1883"
+      - "1884:1883"
       # amqp
-      - "5672:5672"
+      - "5673:5672"
       # ui
       - "8161:8161"
       # stomp
@@ -76,7 +76,7 @@ services:
       # - ./sql:/docker-entrypoint-initdb.d
       - ./sql:/var/lib/mysql
     ports:
-      - "3307:3306"
+      - "3308:3306"
     cap_add:
       - SYS_NICE  # CAP_SYS_NICE
     healthcheck:
@@ -85,11 +85,45 @@ services:
       timeout: 20s
       retries: 10
 
+  er-newman:
+    restart: always
+    container_name: er-newman
+    image: postman/newman
+    command: run https://www.getpostman.com/collections/3982ace13976ed8874bc
+    networks: [backend-services]
+    volumes:
+      - ./newman:/etc/newman
+  
+  er-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.2
+    container_name: er-elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - elastic
+
+
 volumes:
   activemq-data: {}
   sql: {}
+  newman: {}
+  esdata: {}
 
 networks:
   backend-services:
+    driver: bridge
+  elastic:
     driver: bridge
 
